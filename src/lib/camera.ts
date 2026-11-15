@@ -41,7 +41,6 @@ export function mountCamera(root: HTMLElement) {
   // reduced motion: the camera still travels, gently, with no tilt, peel, pull-back or lean
   const calm = document.documentElement.classList.contains("calm");
   const lerp = calm ? 0.3 : LERP;
-  const near = root.querySelector<HTMLElement>("[data-near]");
   const route = root.querySelector<SVGSVGElement>("[data-route]");
   const map = root.querySelector<HTMLElement>("[data-map]");
 
@@ -53,7 +52,6 @@ export function mountCamera(root: HTMLElement) {
   let target = 0;
   let raf = 0;
   let active = -1;
-  let pointer = { x: 0, y: 0 };
 
   /** An element's position on the sheet. offsetLeft alone is not enough: the 3D rows
    *  (transform-style) become offsetParents, so sum the chain up to the sheet. */
@@ -206,16 +204,15 @@ export function mountCamera(root: HTMLElement) {
     const ry = -tilt * 16 * dx;
     const rz = tilt * 2.5 * dx;
     const peel = calm ? 0 : Math.max(lift, Math.abs(v) * 0.4);
-    sheet.style.transform =
-      `translate3d(${vw / 2}px, ${vh / 2}px, 0) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)` +
-      ` rotateZ(${rz.toFixed(3)}deg) scale(${f.s}) translate3d(${-f.x}px, ${-f.y}px, 0)`;
+    // flat at rest: a 3D transform (even at 0deg) keeps the sheet on a 3D layer and Chrome
+    // draws its text soft, so when nothing is tilted or lifted, write a plain 2D transform
+    const flat = Math.abs(rx) < 0.01 && Math.abs(ry) < 0.01 && Math.abs(rz) < 0.01 && peel < 0.001;
+    sheet.classList.toggle("is-flat", flat);
+    sheet.style.transform = flat
+      ? `translate(${vw / 2 - f.x * f.s}px, ${vh / 2 - f.y * f.s}px) scale(${f.s})`
+      : `translate3d(${vw / 2}px, ${vh / 2}px, 0) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)` +
+        ` rotateZ(${rz.toFixed(3)}deg) scale(${f.s}) translate3d(${-f.x}px, ${-f.y}px, 0)`;
     sheet.style.setProperty("--lift", peel.toFixed(3));
-    // near plane: ink wash, travelling faster, leaning slightly with the pointer
-    if (near) {
-      near.style.transform = `translate3d(${vw / 2 - f.x * f.s * 1.3 + pointer.x * 14}px, ${
-        vh / 2 - f.y * f.s * 1.3 + pointer.y * 10
-      }px, 0) scale(${f.s})`;
-    }
 
     stops.forEach((s, k) => {
       const p = clamp((t - s.start) / s.w);
@@ -226,7 +223,11 @@ export function mountCamera(root: HTMLElement) {
 
     if (route) {
       const path = route.querySelector<SVGPathElement>("[data-trace]");
-      if (path) path.style.strokeDashoffset = String(1 - clamp(t / total));
+      if (path) {
+        path.style.strokeDashoffset = String(1 - clamp(t / total));
+        // fades in with the first scroll, so the resting title screen has no stray mark
+        path.style.opacity = String(Math.min(0.55, (t / total) * 20));
+      }
     }
 
     if (map) {
@@ -329,11 +330,6 @@ export function mountCamera(root: HTMLElement) {
     kick();
   };
   const onResize = () => layout();
-  const onPointer = (e: PointerEvent) => {
-    if (e.pointerType !== "mouse") return;
-    pointer = { x: e.clientX / vw - 0.5, y: e.clientY / vh - 0.5 };
-    kick();
-  };
   // keyboard travel: a focused link off camera brings its region into frame
   const onFocus = (e: FocusEvent) => {
     const region = (e.target as HTMLElement).closest<HTMLElement>("[data-stop]");
@@ -364,9 +360,6 @@ export function mountCamera(root: HTMLElement) {
   addEventListener("resize", onResize);
   addEventListener("load", relayout);
   document.fonts?.ready.then(relayout);
-  !calm &&
-    matchMedia("(hover: hover) and (pointer: fine)").matches &&
-    addEventListener("pointermove", onPointer, { passive: true });
   sheet.addEventListener("focusin", onFocus);
   map?.addEventListener("click", onMap);
 
@@ -375,7 +368,6 @@ export function mountCamera(root: HTMLElement) {
     removeEventListener("scroll", onScroll);
     removeEventListener("resize", onResize);
     removeEventListener("load", relayout);
-    removeEventListener("pointermove", onPointer);
     sheet.removeEventListener("focusin", onFocus);
     map?.removeEventListener("click", onMap);
     spacer.style.height = "";

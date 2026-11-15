@@ -425,7 +425,7 @@ export function Sheet() {
 
               {/* ---------------------------------------------------------- the title block */}
               <section id="contact" className="region r-sign" data-stop="Email" data-w="0.6" aria-labelledby="sign-h">
-                <h2 id="sign-h">Tell me what you are building.</h2>
+                <h2 id="sign-h">Tell me what you are building</h2>
                 <table className="block">
                   <tbody>
                     <tr>
@@ -472,13 +472,6 @@ export function Sheet() {
         </div>
       </main>
 
-      <div className="near" data-near aria-hidden="true">
-        <i style={{ left: 300, top: 900, width: 1400, height: 900 }} />
-        <i style={{ left: 2600, top: 300, width: 1600, height: 1100 }} />
-        <i style={{ left: 1200, top: 2600, width: 1800, height: 1200 }} />
-        <i style={{ left: 3800, top: 3300, width: 1400, height: 1000 }} />
-      </div>
-
       <nav className="map" data-map aria-label="Sheet map">
         <div className="map__plate" id="sheet-map" data-plate>
           {STOPS.map((s, i) => (
@@ -498,7 +491,8 @@ export function Sheet() {
           <span data-label>Title</span>
           <span className="map__hint"> · map</span>
         </button>
-        <a className="btn btn--small" href={`mailto:${profile.email}`}>
+        {/* the one filled Email me lives in the title block; here it stays a quiet link */}
+        <a className="link map__mail" href={`mailto:${profile.email}`}>
           Email me
         </a>
       </nav>
