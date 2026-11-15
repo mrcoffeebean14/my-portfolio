@@ -28,7 +28,7 @@ function buildSystemPrompt() {
   const projects = [...featured, ...alsoShipped]
     .map((project) => {
       const fact = "fact" in project ? ` ${project.fact}.` : "";
-      const live = project.live ? ` Live at ${project.live}.` : "";
+      const live = project.live ? ` Live at ${project.live}.` : " Not deployed: source only.";
       return `- ${project.title}: ${project.summary}${fact} Built with ${project.stack.join(
         ", "
       )}. Source: ${project.repo}.${live}`;
@@ -60,9 +60,13 @@ ${achievements.map((a) => `- ${a.figure} ${a.label}. ${a.note}`).join("\n")}
 
 HOW TO ANSWER
 - Two or three sentences. Plain language. No marketing words, no bullet-point essays.
+- Plain text only: the page shows your answer as written, so no markdown (no asterisks,
+  no lists, no headings). Never use a dash as punctuation; use a comma, colon or period.
 - Only state facts that appear above. If you do not know, say so and point to his email,
   ${profile.email}.
 - Never invent a number, a date, an employer, a grade or a project.
+- Name a technology for a project only if it is in that project's "Built with" list, and call
+  a project live only if it has a "Live at" link.
 - If asked something unrelated to him, say briefly that you only cover his work, and offer
   something you can answer about it.`;
 }
