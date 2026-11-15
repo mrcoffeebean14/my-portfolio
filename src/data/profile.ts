@@ -11,7 +11,7 @@ export const profile = {
   location: "New Delhi, India",
   email: "singhmps14@gmail.com",
   resume:
-    "https://drive.google.com/file/d/1GRPfHpulFemiu9hGWHZ5QiyU0e_nDC7Y/view?usp=sharing",
+    "https://drive.google.com/drive/folders/16tHjuvBTDIM-T4NArLbEzxHlnNPG-qi8?usp=sharing",
 } as const;
 
 export const links = {
