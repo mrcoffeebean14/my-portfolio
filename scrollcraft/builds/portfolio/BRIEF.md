@@ -137,3 +137,7 @@ inside `<main>`; band labels struck through by the next divider.
 
 Not verified: a real phone (iOS Safari touch scroll, address-bar resize), screen
 reader pass, no-JS render, deployment on Vercel.
+
+## Changes after the build
+
+- 2026-11-25: Quanta added as the stop after Adapt-RAG (its own screenshot, read-only ledger diagram). TAILORAI removed from the page and from the data the assistant reads, at the owner's request.

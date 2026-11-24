@@ -4,9 +4,6 @@
  * Nothing here is rounded up or invented.
  */
 
-/** Which hand-built UI fragment stands in the card's panel. */
-export type Panel = "router" | "builder" | "auth" | "diff";
-
 export interface Project {
   id: string;
   title: string;
@@ -17,7 +14,6 @@ export interface Project {
   stack: string[];
   repo: string;
   live?: string;
-  panel: Panel;
 }
 
 export const featured: Project[] = [
@@ -29,7 +25,15 @@ export const featured: Project[] = [
     fact: "7 LangGraph nodes, 3 routes",
     stack: ["Python", "LangGraph", "FastAPI", "Qdrant", "MongoDB"],
     repo: "https://github.com/mrcoffeebean14/Adapt-RAG",
-    panel: "router",
+  },
+  {
+    id: "quanta",
+    title: "Quanta",
+    summary:
+      "Local cost analytics for AI coding agents: it reads the history Codex, Claude Code, OpenCode and Cursor already keep and turns it into per-session tokens and dollars.",
+    fact: "4 agents, 6 dashboard views, 11 CLI commands",
+    stack: ["Python", "FastAPI", "SQLite", "Jinja"],
+    repo: "https://github.com/mrcoffeebean14/Quanta",
   },
   {
     id: "typeclone",
@@ -40,7 +44,6 @@ export const featured: Project[] = [
     stack: ["Next.js", "TypeScript", "FastAPI", "Tailwind"],
     repo: "https://github.com/mrcoffeebean14/TypeForm",
     live: "https://type-form-smoky.vercel.app",
-    panel: "builder",
   },
   {
     id: "spendwise",
@@ -51,18 +54,6 @@ export const featured: Project[] = [
     stack: ["Java", "Spring Boot", "MySQL", "Docker"],
     repo: "https://github.com/mrcoffeebean14/SpendWise",
     live: "https://spendwise-1.up.railway.app/",
-    panel: "auth",
-  },
-  {
-    id: "tailorai",
-    title: "TAILORAI",
-    summary:
-      "An agent that rewrites the sections of a LaTeX resume against a job description and leaves the facts alone.",
-    fact: "4 model providers, certifications never touched",
-    stack: ["Python", "LangGraph", "LangChain", "Next.js"],
-    repo: "https://github.com/mrcoffeebean14/TAILORAI",
-    live: "https://tailorai-xi.vercel.app",
-    panel: "diff",
   },
 ];
 
