@@ -21,7 +21,7 @@ import { featured, alsoShipped } from "@/data/projects";
 
 const project = (id: string) => featured.find((p) => p.id === id)!;
 const rag = project("adapt-rag");
-const tailor = project("tailorai");
+const quanta = project("quanta");
 const typeclone = project("typeclone");
 const spendwise = project("spendwise");
 const [role] = experience;
@@ -30,7 +30,7 @@ const [leetcode, codechef, paper] = achievements;
 const STOPS = [
   { id: "title", label: "Title" },
   { id: "adapt-rag", label: "Adapt-RAG" },
-  { id: "tailorai", label: "TAILORAI" },
+  { id: "quanta", label: "Quanta" },
   { id: "products", label: "Typeclone and SpendWise" },
   { id: "internship", label: "Corporate Cruise" },
   { id: "stack", label: "Stack" },
@@ -109,14 +109,6 @@ const SPENDWISE_API: Array<[string, string, string]> = [
   ["POST", "/api/recurring", "recurring expense"],
   ["GET", "/api/report/pdf", "monthly report, or /excel"],
   ["ANY", "21st call in a minute", "429, rate limited"],
-];
-
-const TAILOR_SECTIONS = ["projects", "experience", "skills", "education"];
-
-const DIFF: Array<[string, string]> = [
-  ["\\item Built REST APIs for the login system.", "\\item Built 6+ REST APIs for authentication and session management in Node.js."],
-  ["\\item Worked on payments.", "\\item Integrated third-party payment and email APIs, cutting handling time by about 60%."],
-  ["\\item Did code reviews.", "\\item Caught a critical payment flow bug across 10+ React and Node.js pull requests."],
 ];
 
 function Mark({ file, size = 22 }: { file: string; size?: number }) {
@@ -217,63 +209,72 @@ export function Sheet() {
                 scripted walk through the real graph, not a recorded run.
               </p>
             </section>
+
+            {/* ------------------------------------------------------------ Quanta
+                Four agents' local history converges into one ledger; the moment is the real
+                dashboard, shown from the repository's own screenshot. */}
+            <section
+              id="quanta"
+              className="region r-quanta"
+              data-stop="Quanta"
+              data-w="1.2"
+              data-live
+              data-land="0.8"
+              aria-labelledby="quanta-h"
+            >
+              <div className="r-quanta__body">
+                <div>
+                  <header className="r-head">
+                    <h2 id="quanta-h">{quanta.title}</h2>
+                    <p>{quanta.summary}</p>
+                    <p className="fact mono">{quanta.fact}</p>
+                    <Stack items={quanta.stack} />
+                    <Links repo={quanta.repo} live={quanta.live} />
+                  </header>
+
+                  <ol className="ledger mono" aria-label="How Quanta builds its ledger">
+                    <li className="ledger__in">
+                      <ul aria-label="Read, read-only, from">
+                        {["Codex", "Claude Code", "OpenCode", "Cursor"].map((agent, i) => (
+                          <li key={agent} style={{ "--i": i } as React.CSSProperties}>
+                            {agent}
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                    <li className="ledger__db">
+                      <span>one SQLite ledger</span>
+                    </li>
+                    <li className="ledger__out">
+                      <span>web dashboard</span>
+                      <span>CLI</span>
+                    </li>
+                  </ol>
+                  <p className="note">
+                    Source files are opened read-only. Quanta keeps token counts and costs, never
+                    prompts, responses, code or credentials.
+                  </p>
+                </div>
+
+                <figure className="shot">
+                  <div className="shot__bar">
+                    <span>Quanta · Overview</span>
+                    <span className="mono">127.0.0.1:8765</span>
+                  </div>
+                  <Image
+                    src="/projects/quanta-overview.png"
+                    alt="Quanta's overview page: spend over time, model composition by cost, tokens and calls, and a per-model cost breakdown"
+                    width={1600}
+                    height={1100}
+                    sizes="(max-width: 760px) 100vw, 1000px"
+                  />
+                  <figcaption>The overview page, from the repository, on its demo data</figcaption>
+                </figure>
+              </div>
+            </section>
           </div>
 
           <div className="row row--2">
-            {/* ------------------------------------------------------------ TAILORAI */}
-            <section
-              id="tailorai"
-              className="region r-tailor"
-              data-stop="TAILORAI"
-              data-w="1.2"
-              data-live
-              data-floor="0.92"
-              data-land="0.9"
-              aria-labelledby="tailor-h"
-            >
-              <div className="r-tailor__body">
-              <header className="r-head">
-                <h2 id="tailor-h">{tailor.title}</h2>
-                <p>{tailor.summary}</p>
-                <Stack items={tailor.stack} />
-                <Links repo={tailor.repo} live={tailor.live} />
-              </header>
-
-              <ol className="pipe mono" aria-label="TAILORAI's LangGraph workflow">
-                <li className="pipe__node pipe__node--on">parse</li>
-                <li className="pipe__fan">
-                  <span className="pipe__node pipe__node--on">customize_sections</span>
-                  <ul>
-                    {TAILOR_SECTIONS.map((s, i) => (
-                      <li key={s} style={{ "--i": i } as React.CSSProperties}>
-                        <span>{s}</span>
-                        <i aria-hidden="true" />
-                      </li>
-                    ))}
-                  </ul>
-                  <span className="pipe__locked">every other section, certifications included, passes through untouched</span>
-                </li>
-                <li className="pipe__node pipe__node--merge">merge</li>
-                <li className="pipe__node pipe__node--cover">cover_letter</li>
-              </ol>
-
-              <figure className="diff mono">
-                <figcaption>Example bullets in, rewritten against a backend job description</figcaption>
-                {DIFF.map(([before, after], i) => (
-                  <div key={i} className="diff__pair" style={{ "--i": i } as React.CSSProperties}>
-                    <p className="diff__del">
-                      <span aria-hidden="true">-</span> {before}
-                    </p>
-                    <p className="diff__add">
-                      <span aria-hidden="true">+</span> {after}
-                    </p>
-                  </div>
-                ))}
-                <p className="diff__foot">Groq by default (qwen3-32b). OpenAI, Anthropic or Google by changing one file.</p>
-              </figure>
-              </div>
-            </section>
-
             {/* ------------------------------------------------------------ Typeclone, SpendWise, index */}
             <section id="products" className="region r-products" data-stop="Typeclone and SpendWise" data-w="1.2" aria-labelledby="products-h">
               <h2 id="products-h" className="sr-only">
